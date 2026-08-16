@@ -2,7 +2,51 @@
 
 Custom integration voor afvalcontainers uit Kliko Container Manager.
 
+GitHub-repository:
+
+```text
+https://github.com/realrolfje/klikostatus
+```
+
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=realrolfje&repository=klikostatus&category=integration)
+
+Dit project is een Home Assistant custom integration. Het is geen Home Assistant Supervisor add-on voor de Add-on Store.
+
 ## Installatie in Home Assistant
+
+### Installatie via HACS
+
+Als je HACS gebruikt:
+
+1. Klik op de HACS-knop bovenaan deze README.
+2. Bevestig in Home Assistant dat je deze repository als HACS-repository wilt openen.
+3. Installeer de integratie.
+4. Herstart Home Assistant.
+
+Als de knop niet werkt, voeg de repository dan handmatig toe:
+
+1. Open HACS in Home Assistant.
+2. Ga naar `Integrations`.
+3. Open het menu rechtsboven en kies `Custom repositories`.
+4. Vul deze repository in:
+
+```text
+https://github.com/realrolfje/klikostatus
+```
+
+5. Kies als categorie `Integration`.
+6. Klik `Add`.
+7. Zoek daarna in HACS naar `Kliko Container Manager`.
+8. Installeer de integratie.
+9. Herstart Home Assistant.
+
+Voeg de integratie daarna toe via:
+
+```text
+Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Container Manager
+```
+
+### Handmatige installatie
 
 Kopieer de integratiemap naar de `custom_components` map van je Home Assistant-configuratie.
 
@@ -95,6 +139,36 @@ De data wordt standaard elke 60 minuten opgehaald. Bij het opstarten logt de int
 Home Assistant custom integrations slaan config-entry data lokaal op in de Home Assistant-configuratie. Het wachtwoord wordt in de setup-flow als wachtwoordveld gevraagd, maar is geen aparte secret vault. Beperk toegang tot je Home Assistant-configuratiebestanden.
 
 ## Updaten
+
+### Updaten via HACS
+
+Als de integratie via HACS is toegevoegd, verschijnt een update automatisch in HACS zodra er een nieuwe versie beschikbaar is op GitHub.
+
+1. Open HACS.
+2. Ga naar `Integrations`.
+3. Open `Kliko Container Manager`.
+4. Klik `Update` als er een update beschikbaar is.
+5. Herstart Home Assistant.
+
+### Handmatig updaten met Git
+
+Als je de repository direct in je Home Assistant-configuratie wilt beheren, clone dan de repository in `custom_components`:
+
+```bash
+cd /config/custom_components
+git clone https://github.com/realrolfje/klikostatus.git kliko_status
+```
+
+Updaten kan daarna met:
+
+```bash
+cd /config/custom_components/kliko_status
+git pull
+```
+
+Herstart daarna Home Assistant.
+
+### Handmatig updaten zonder Git
 
 Vervang bij een nieuwe versie de map:
 

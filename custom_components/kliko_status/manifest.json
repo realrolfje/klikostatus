@@ -1,11 +1,12 @@
 {
   "domain": "kliko_status",
   "name": "Kliko Container Manager",
-  "codeowners": [],
+  "codeowners": ["@realrolfje"],
   "config_flow": true,
-  "documentation": "https://github.com/custom-components/kliko_status",
+  "documentation": "https://github.com/realrolfje/klikostatus",
   "integration_type": "service",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/realrolfje/klikostatus/issues",
   "requirements": [],
   "version": "0.1.0"
 }
