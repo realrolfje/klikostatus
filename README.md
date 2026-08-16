@@ -138,6 +138,8 @@ De data wordt standaard elke 60 minuten opgehaald. Bij het opstarten logt de int
 
 Home Assistant custom integrations slaan config-entry data lokaal op in de Home Assistant-configuratie. Het wachtwoord wordt in de setup-flow als wachtwoordveld gevraagd, maar is geen aparte secret vault. Beperk toegang tot je Home Assistant-configuratiebestanden.
 
+De integratie logt het wachtwoord niet, maakt er geen entities of attributen van, en neemt het niet op in de containerdata. Ook de ontvangen token wordt niet opgeslagen in de config entry; die blijft alleen in geheugen zolang Home Assistant draait.
+
 ## Updaten
 
 ### Updaten via HACS
