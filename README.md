@@ -1,6 +1,6 @@
 # Kliko Container Manager Home Assistant-integratie
 
-Custom integration voor afvalcontainers uit Kliko Container Manager.
+Home Assistant-integratie voor afvalcontainers uit Kliko Container Manager.
 
 GitHub-repository:
 
