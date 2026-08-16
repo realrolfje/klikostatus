@@ -1,0 +1,75 @@
+{
+  "title": "Kliko Container Manager",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Kliko Container Manager",
+        "description": "Choose the municipality and container.",
+        "data": {
+          "client": "Municipality",
+          "container_number": "Container number",
+          "scan_interval_minutes": "Scan interval in minutes"
+        }
+      },
+      "password": {
+        "title": "Log in with card number",
+        "data": {
+          "card_number": "Card number",
+          "password": "Password"
+        }
+      },
+      "address": {
+        "title": "Log in with address",
+        "data": {
+          "zip_code": "Zip code",
+          "street_number": "House number",
+          "street_number_addition": "Addition",
+          "card_number": "Card number"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the Kliko endpoint.",
+      "invalid_auth": "The login details were rejected.",
+      "container_not_found": "The configured container number was not found.",
+      "unsupported_login_type": "This municipality uses a login method that is not supported yet."
+    },
+    "abort": {
+      "already_configured": "This container is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Kliko Container Manager options",
+        "data": {
+          "scan_interval_minutes": "Scan interval in minutes"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "percentage_full": {
+        "name": "Full"
+      },
+      "street": {
+        "name": "Street"
+      },
+      "fraction": {
+        "name": "Waste type"
+      }
+    },
+    "binary_sensor": {
+      "error": {
+        "name": "Error"
+      },
+      "is_full": {
+        "name": "Is full"
+      },
+      "is_nearly_full": {
+        "name": "Is nearly full"
+      }
+    }
+  }
+}

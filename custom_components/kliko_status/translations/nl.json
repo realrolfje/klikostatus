@@ -1,0 +1,75 @@
+{
+  "title": "Kliko Container Manager",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kliko Container Manager instellen",
+        "description": "Kies de gemeente en container.",
+        "data": {
+          "client": "Gemeente",
+          "container_number": "Containernummer",
+          "scan_interval_minutes": "Update-interval in minuten"
+        }
+      },
+      "password": {
+        "title": "Inloggen met kaartnummer",
+        "data": {
+          "card_number": "Kaartnummer",
+          "password": "Wachtwoord"
+        }
+      },
+      "address": {
+        "title": "Inloggen met adres",
+        "data": {
+          "zip_code": "Postcode",
+          "street_number": "Huisnummer",
+          "street_number_addition": "Toevoeging",
+          "card_number": "Kaartnummer"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kan geen verbinding maken met het Kliko-endpoint.",
+      "invalid_auth": "De inloggegevens zijn geweigerd.",
+      "container_not_found": "Het ingestelde containernummer is niet gevonden.",
+      "unsupported_login_type": "Deze gemeente gebruikt een loginmethode die nog niet ondersteund wordt."
+    },
+    "abort": {
+      "already_configured": "Deze container is al ingesteld."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Kliko Container Manager opties",
+        "data": {
+          "scan_interval_minutes": "Update-interval in minuten"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "percentage_full": {
+        "name": "Vulling"
+      },
+      "street": {
+        "name": "Straat"
+      },
+      "fraction": {
+        "name": "Afvaltype"
+      }
+    },
+    "binary_sensor": {
+      "error": {
+        "name": "Fout"
+      },
+      "is_full": {
+        "name": "Vol"
+      },
+      "is_nearly_full": {
+        "name": "Bijna vol"
+      }
+    }
+  }
+}
