@@ -12,6 +12,8 @@ https://github.com/realrolfje/klikostatus
 
 Dit project is een Home Assistant custom integration. Het is geen Home Assistant Supervisor add-on voor de Add-on Store.
 
+Voor GitHub social preview kan `assets/social-preview.png` worden gebruikt.
+
 ## Installatie in Home Assistant
 
 ### Installatie via HACS
