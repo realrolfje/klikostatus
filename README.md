@@ -133,8 +133,8 @@ De integratie maakt per geselecteerde container een device aan. Per device worde
 - Binary sensor `Fout`: waarde van `error`.
 - Binary sensor `Vol`: waarde van `isFull`, wanneer de bron dit veld levert.
 - Binary sensor `Bijna vol`: waarde van `isNearlyFull`, wanneer de bron dit veld levert.
-- Sensor `Straat`: waarde van `address.street`.
-- Sensor `Wijk`: waarde van `address.district`.
+- Sensor `Straat`: waarde van `address.street`, wanneer de bron dit veld levert.
+- Sensor `Wijk`: waarde van `address.district`, wanneer de bron dit veld levert.
 - Sensor `Afvaltype`: waarde van `fraction`.
 - Geo-location `Locatie`: kaartlocatie van de container, wanneer de bron latitude en longitude levert.
 

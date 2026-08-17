@@ -67,6 +67,7 @@ class KlikoSensorEntityDescription(SensorEntityDescription):
     """Describes a Kliko sensor."""
 
     value_fn: Callable[[dict[str, Any]], Any]
+    available_fn: Callable[[dict[str, Any]], bool] = lambda data: True
 
 
 SENSOR_DESCRIPTIONS: tuple[KlikoSensorEntityDescription, ...] = (
@@ -83,12 +84,14 @@ SENSOR_DESCRIPTIONS: tuple[KlikoSensorEntityDescription, ...] = (
         translation_key="street",
         icon="mdi:card-account-details-outline",
         value_fn=_street,
+        available_fn=lambda data: _street(data) is not None,
     ),
     KlikoSensorEntityDescription(
         key="district",
         translation_key="district",
         icon="mdi:map-marker-radius-outline",
         value_fn=_district,
+        available_fn=lambda data: _district(data) is not None,
     ),
     KlikoSensorEntityDescription(
         key="fraction",
@@ -109,6 +112,9 @@ async def async_setup_entry(
         KlikoSensor(entry, container_number, description)
         for container_number in entry.runtime_data.coordinator.container_numbers
         for description in SENSOR_DESCRIPTIONS
+        if description.available_fn(
+            entry.runtime_data.coordinator.data.get(container_number, {})
+        )
     )
 
 

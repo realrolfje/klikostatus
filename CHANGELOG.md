@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Sensoren `Straat` en `Wijk` worden alleen aangemaakt wanneer de gekozen bron die waarden levert.
+
 ## 0.2.0
 
 - Iconen toegevoegd voor de sensors `Vulling`, `Straat` en `Afvaltype`.
