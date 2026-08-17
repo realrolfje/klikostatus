@@ -119,6 +119,8 @@ python3 -m json.tool custom_components/kliko_status/translations/nl.json > /dev/
 
 ## Releaseproces
 
+Werk op `main` mag vooruitlopen op de laatste release. Wijzigingen die wel op `main` staan maar nog niet in een release zitten, blijven in `CHANGELOG.md` onder `Unreleased`.
+
 1. Werk `CHANGELOG.md` bij met de nieuwe versie en de belangrijkste wijzigingen.
 2. Verhoog de versie in `custom_components/kliko_status/manifest.json`.
 3. Draai de lokale validatiechecks uit dit document.
@@ -146,3 +148,5 @@ git push origin "v<versie>"
 8. Gebruik de inhoud uit `CHANGELOG.md` als release notes.
 
 Voor HACS-gebruikers is vooral de GitHub Release belangrijk: daar zien gebruikers wat er gewijzigd is wanneer HACS een update aanbiedt.
+
+HACS kan ook zonder GitHub Releases werken, maar dan gebruikt HACS de default branch. Zodra de repository GitHub Releases gebruikt, gebruikt HACS de tagnaam van de laatste release als remote versie. Alleen een tag pushen is niet genoeg; maak ook een GitHub Release bij de tag.

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Iconen toegevoegd voor de sensors `Vulling`, `Straat` en `Afvaltype`.
+
 ## 0.1.1
 
 - Ondersteuning voor een of meer afvalcontainers onder dezelfde login.
