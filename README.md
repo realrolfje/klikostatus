@@ -1,5 +1,8 @@
 # Kliko Afvalcontainer Status Home Assistant-integratie
 
+[![CI](https://github.com/realrolfje/klikostatus/actions/workflows/ci.yml/badge.svg)](https://github.com/realrolfje/klikostatus/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/badge/dynamic/json?label=version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Frealrolfje%2Fklikostatus%2Fmain%2Fcustom_components%2Fkliko_status%2Fmanifest.json)](https://github.com/realrolfje/klikostatus/releases)
+
 Home Assistant-integratie voor afvalcontainers uit Kliko Container Manager.
 
 GitHub-repository:
