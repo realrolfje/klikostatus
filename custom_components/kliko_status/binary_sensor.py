@@ -15,6 +15,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import KlikoConfigEntry
+from .const import CONF_SOURCE, SOURCE_KLIKO_MANAGER
 from .entity import KlikoEntity
 
 
@@ -51,10 +52,18 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Kliko binary sensors."""
+    descriptions = BINARY_SENSOR_DESCRIPTIONS
+    if entry.data.get(CONF_SOURCE, SOURCE_KLIKO_MANAGER) != SOURCE_KLIKO_MANAGER:
+        descriptions = tuple(
+            description
+            for description in BINARY_SENSOR_DESCRIPTIONS
+            if description.key == "error"
+        )
+
     async_add_entities(
         KlikoBinarySensor(entry, container_number, description)
         for container_number in entry.runtime_data.coordinator.container_numbers
-        for description in BINARY_SENSOR_DESCRIPTIONS
+        for description in descriptions
     )
 
 

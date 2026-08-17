@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import re
 from typing import Any
 
 from aiohttp import ClientError, ClientSession
@@ -148,3 +150,117 @@ class KlikoApiClient:
             return [container for container in data if isinstance(container, dict)]
 
         raise KlikoApiError("Kliko endpoint returned an unexpected payload")
+
+
+class SpaarnelandenApiClient:
+    """Client for the public Spaarnelanden container map."""
+
+    _CONTAINERS_PATTERN = re.compile(
+        r"var\s+oContainerModel\s*=\s*(\[.*?\]);",
+        re.DOTALL,
+    )
+    _DISTRICTS_PATTERN = re.compile(
+        r"^\s*districts\s*=\s*(\[.*?\]);\s*$",
+        re.MULTILINE,
+    )
+
+    def __init__(self, session: ClientSession, containers_url: str) -> None:
+        """Initialize the client."""
+        self._session = session
+        self._containers_url = containers_url
+
+    async def async_get_containers(self) -> list[dict[str, Any]]:
+        """Fetch and normalize containers from the public map page."""
+        try:
+            async with self._session.get(self._containers_url) as response:
+                response.raise_for_status()
+                html = await response.text()
+        except (ClientError, TimeoutError) as err:
+            raise KlikoApiError("Unable to connect to Spaarnelanden endpoint") from err
+
+        return self._parse_containers(html)
+
+    def _parse_containers(self, html: str) -> list[dict[str, Any]]:
+        """Parse the embedded JavaScript container model."""
+        containers_match = self._CONTAINERS_PATTERN.search(html)
+        if containers_match is None:
+            raise KlikoApiError("Spaarnelanden page did not contain container data")
+
+        try:
+            containers = json.loads(containers_match.group(1))
+        except ValueError as err:
+            raise KlikoApiError("Spaarnelanden container data was invalid") from err
+
+        districts = self._parse_districts(html)
+        if not isinstance(containers, list):
+            raise KlikoApiError("Spaarnelanden container data was unexpected")
+
+        return [
+            normalized
+            for container in containers
+            if isinstance(container, dict)
+            if (normalized := self._normalize_container(container, districts)) is not None
+        ]
+
+    def _parse_districts(self, html: str) -> dict[int, str]:
+        """Parse district names by ID when the page includes them."""
+        districts_match = self._DISTRICTS_PATTERN.search(html)
+        if districts_match is None:
+            return {}
+
+        try:
+            districts = json.loads(districts_match.group(1))
+        except ValueError:
+            return {}
+
+        if not isinstance(districts, list):
+            return {}
+
+        result: dict[int, str] = {}
+        for district in districts:
+            if not isinstance(district, dict):
+                continue
+            district_id = district.get("iId")
+            name = district.get("sName")
+            if isinstance(district_id, int) and name:
+                result[district_id] = str(name)
+        return result
+
+    def _normalize_container(
+        self,
+        container: dict[str, Any],
+        districts: dict[int, str],
+    ) -> dict[str, Any] | None:
+        """Normalize Spaarnelanden fields to the integration's container shape."""
+        container_number = container.get("sRegistrationNumber")
+        if container_number is None:
+            return None
+
+        district_id = container.get("iCityDistrictId")
+        district = districts.get(district_id) if isinstance(district_id, int) else None
+        is_out_of_use = bool(container.get("bIsOutOfUse"))
+
+        return {
+            "containerNumber": str(container_number).strip(),
+            "fraction": container.get("sProductName"),
+            "percentageFull": container.get("dFillingDegree"),
+            "error": is_out_of_use,
+            "isFull": None,
+            "isNearlyFull": None,
+            "address": {
+                "district": district,
+                "latitude": container.get("dLatitude"),
+                "longitude": container.get("dLongitude"),
+            },
+            "spaarnelanden": {
+                "id": container.get("iId"),
+                "districtId": container.get("iDistrictId"),
+                "cityDistrictId": district_id,
+                "fillingDegreeStatus": container.get("iFillingDegreeStatus"),
+                "isOutOfUse": is_out_of_use,
+                "isSkipped": bool(container.get("bIsSkipped")),
+                "isEmptiedToday": bool(container.get("bIsEmptiedToday")),
+                "dateLastEmptied": container.get("sDateLastEmptied"),
+                "containerKindName": container.get("sContainerKindName"),
+            },
+        }

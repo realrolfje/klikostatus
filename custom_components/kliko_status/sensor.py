@@ -43,6 +43,17 @@ def _street(data: dict[str, Any]) -> str | None:
     return str(street)
 
 
+def _district(data: dict[str, Any]) -> str | None:
+    """Return address.district when present."""
+    address = data.get("address")
+    if not isinstance(address, dict):
+        return None
+    district = address.get("district")
+    if district is None:
+        return None
+    return str(district)
+
+
 def _fraction(data: dict[str, Any]) -> str | None:
     """Return the waste fraction when present."""
     fraction = data.get("fraction")
@@ -72,6 +83,12 @@ SENSOR_DESCRIPTIONS: tuple[KlikoSensorEntityDescription, ...] = (
         translation_key="street",
         icon="mdi:card-account-details-outline",
         value_fn=_street,
+    ),
+    KlikoSensorEntityDescription(
+        key="district",
+        translation_key="district",
+        icon="mdi:map-marker-radius-outline",
+        value_fn=_district,
     ),
     KlikoSensorEntityDescription(
         key="fraction",

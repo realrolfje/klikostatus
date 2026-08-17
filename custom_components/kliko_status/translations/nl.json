@@ -4,9 +4,9 @@
     "step": {
       "user": {
         "title": "Kliko Afvalcontainer Status instellen",
-        "description": "Kies de gemeente. Na het inloggen kun je een of meer containers selecteren.",
+        "description": "Kies de gemeente of bron. Daarna kun je een of meer containers selecteren.",
         "data": {
-          "client": "Gemeente",
+          "client": "Gemeente of bron",
           "scan_interval_minutes": "Update-interval in minuten"
         }
       },
@@ -65,8 +65,16 @@
       "street": {
         "name": "Straat"
       },
+      "district": {
+        "name": "Wijk"
+      },
       "fraction": {
         "name": "Afvaltype"
+      }
+    },
+    "geo_location": {
+      "location": {
+        "name": "Locatie"
       }
     },
     "binary_sensor": {

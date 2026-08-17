@@ -25,6 +25,7 @@ from .api import (
     KlikoApiClient,
     KlikoApiError,
     KlikoAuthError,
+    SpaarnelandenApiClient,
 )
 from .const import (
     CONF_APP,
@@ -37,6 +38,7 @@ from .const import (
     CONF_LOGIN_TYPE,
     CONF_LOGIN_URL,
     CONF_SCAN_INTERVAL_MINUTES,
+    CONF_SOURCE,
     CONF_STREET_NUMBER,
     CONF_STREET_NUMBER_ADDITION,
     CONF_ZIP_CODE,
@@ -45,7 +47,10 @@ from .const import (
     DOMAIN,
     LOGIN_TYPE_ADDRESS,
     LOGIN_TYPE_ADDRESS_AND_CARDNUMBER,
+    LOGIN_TYPE_NONE,
     LOGIN_TYPE_PASSWORD,
+    SOURCE_KLIKO_MANAGER,
+    SOURCE_SPAARNELANDEN,
     MIN_SCAN_INTERVAL_MINUTES,
     SUPPORTED_CLIENTS,
 )
@@ -81,6 +86,8 @@ def _container_label(container: dict[str, Any]) -> str:
             if street_number:
                 address_label = f"{address_label} {street_number}"
             parts.append(address_label)
+        elif district := address.get("district"):
+            parts.append(str(district))
 
     return " - ".join(part for part in parts if part)
 
@@ -90,6 +97,13 @@ async def async_fetch_containers(
     data: dict[str, Any],
 ) -> list[dict[str, Any]]:
     """Validate user input by fetching available containers."""
+    if data.get(CONF_SOURCE, SOURCE_KLIKO_MANAGER) == SOURCE_SPAARNELANDEN:
+        client = SpaarnelandenApiClient(
+            async_get_clientsession(hass),
+            data[CONF_CONTAINERS_URL],
+        )
+        return await client.async_get_containers()
+
     client = KlikoApiClient(
         async_get_clientsession(hass),
         data[CONF_LOGIN_URL],
@@ -110,8 +124,14 @@ def _apply_client_defaults(data: dict[str, Any]) -> dict[str, Any]:
     """Add derived endpoint settings for the selected Kliko client."""
     client_id = data[CONF_CLIENT]
     client = CLIENTS[client_id]
+    data[CONF_SOURCE] = client.get(CONF_SOURCE, SOURCE_KLIKO_MANAGER)
     data[CONF_CLIENT_NAME] = client_id
     data[CONF_LOGIN_TYPE] = client["login_type"]
+
+    if data[CONF_SOURCE] == SOURCE_SPAARNELANDEN:
+        data[CONF_CONTAINERS_URL] = client["containers_url"]
+        return data
+
     data[CONF_APP] = f"cp-{client_id}.kcm.com"
     login_endpoint = (
         "loginWithAddress"
@@ -150,6 +170,11 @@ class KlikoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             self._setup_data = _apply_client_defaults(user_input)
+            if self._setup_data[CONF_LOGIN_TYPE] == LOGIN_TYPE_NONE:
+                return await self._async_fetch_and_show_containers(
+                    self._setup_data,
+                    errors,
+                )
             if self._setup_data[CONF_LOGIN_TYPE] == LOGIN_TYPE_PASSWORD:
                 return await self.async_step_password()
             return await self.async_step_address()
@@ -238,10 +263,13 @@ class KlikoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str],
     ) -> FlowResult:
         """Fetch available containers and continue to the container selection step."""
-        unique_login = data.get(CONF_CARD_NUMBER) or (
-            f"{data.get(CONF_ZIP_CODE)}_{data.get(CONF_STREET_NUMBER)}_"
-            f"{data.get(CONF_STREET_NUMBER_ADDITION, '')}"
-        )
+        if data[CONF_LOGIN_TYPE] == LOGIN_TYPE_NONE:
+            unique_login = "public"
+        else:
+            unique_login = data.get(CONF_CARD_NUMBER) or (
+                f"{data.get(CONF_ZIP_CODE)}_{data.get(CONF_STREET_NUMBER)}_"
+                f"{data.get(CONF_STREET_NUMBER_ADDITION, '')}"
+            )
         await self.async_set_unique_id(f"{data[CONF_CLIENT]}_{unique_login}")
         self._abort_if_unique_id_configured()
 
@@ -260,6 +288,26 @@ class KlikoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return await self.async_step_containers()
 
         self._setup_data = data
+        if data[CONF_LOGIN_TYPE] == LOGIN_TYPE_NONE:
+            return self.async_show_form(
+                step_id="user",
+                data_schema=vol.Schema(
+                    {
+                        vol.Required(
+                            CONF_CLIENT,
+                            default=data[CONF_CLIENT],
+                        ): vol.In(SUPPORTED_CLIENTS),
+                        vol.Required(
+                            CONF_SCAN_INTERVAL_MINUTES,
+                            default=data.get(
+                                CONF_SCAN_INTERVAL_MINUTES,
+                                DEFAULT_SCAN_INTERVAL_MINUTES,
+                            ),
+                        ): SCAN_INTERVAL_VALIDATOR,
+                    }
+                ),
+                errors=errors,
+            )
         if data[CONF_LOGIN_TYPE] == LOGIN_TYPE_PASSWORD:
             return self._show_password_form(errors)
         return self._show_address_form(errors)
@@ -268,8 +316,13 @@ class KlikoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Create the config entry after containers were selected."""
         client_name = CLIENTS[data[CONF_CLIENT]]["name"]
         container_count = len(data[CONF_CONTAINER_NUMBERS])
+        title = (
+            f"{client_name} Kliko ({container_count})"
+            if data.get(CONF_SOURCE, SOURCE_KLIKO_MANAGER) == SOURCE_KLIKO_MANAGER
+            else f"{client_name} ({container_count})"
+        )
         return self.async_create_entry(
-            title=f"{client_name} Kliko ({container_count})",
+            title=title,
             data=data,
         )
 

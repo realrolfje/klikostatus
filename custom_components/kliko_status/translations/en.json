@@ -4,9 +4,9 @@
     "step": {
       "user": {
         "title": "Set up Kliko Afvalcontainer Status",
-        "description": "Choose the municipality. After logging in you can select one or more containers.",
+        "description": "Choose the municipality or source. Then you can select one or more containers.",
         "data": {
-          "client": "Municipality",
+          "client": "Municipality or source",
           "scan_interval_minutes": "Scan interval in minutes"
         }
       },
@@ -65,8 +65,16 @@
       "street": {
         "name": "Street"
       },
+      "district": {
+        "name": "District"
+      },
       "fraction": {
         "name": "Waste type"
+      }
+    },
+    "geo_location": {
+      "location": {
+        "name": "Location"
       }
     },
     "binary_sensor": {

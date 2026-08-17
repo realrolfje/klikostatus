@@ -14,13 +14,19 @@ from .const import (
     CONF_CLIENT,
     CONF_CONTAINER_NUMBER,
     CONF_CONTAINER_NUMBERS,
+    CONF_LOGIN_TYPE,
     CONF_STREET_NUMBER,
     CONF_STREET_NUMBER_ADDITION,
     CONF_ZIP_CODE,
+    LOGIN_TYPE_NONE,
     DOMAIN,
 )
 
-PLATFORMS: tuple[Platform, ...] = (Platform.BINARY_SENSOR, Platform.SENSOR)
+PLATFORMS: tuple[Platform, ...] = (
+    Platform.BINARY_SENSOR,
+    Platform.GEO_LOCATION,
+    Platform.SENSOR,
+)
 
 
 @dataclass
@@ -73,8 +79,11 @@ def _entry_unique_id(data: dict) -> str | None:
     if not client:
         return None
 
-    unique_login = data.get(CONF_CARD_NUMBER) or (
-        f"{data.get(CONF_ZIP_CODE)}_{data.get(CONF_STREET_NUMBER)}_"
-        f"{data.get(CONF_STREET_NUMBER_ADDITION, '')}"
-    )
+    if data.get(CONF_LOGIN_TYPE) == LOGIN_TYPE_NONE:
+        unique_login = "public"
+    else:
+        unique_login = data.get(CONF_CARD_NUMBER) or (
+            f"{data.get(CONF_ZIP_CODE)}_{data.get(CONF_STREET_NUMBER)}_"
+            f"{data.get(CONF_STREET_NUMBER_ADDITION, '')}"
+        )
     return f"{client}_{unique_login}"
