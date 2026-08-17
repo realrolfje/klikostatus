@@ -15,10 +15,6 @@ https://github.com/realrolfje/klikostatus
 
 Dit project is een Home Assistant custom integration. Het is geen Home Assistant Supervisor add-on voor de Add-on Store.
 
-Voor GitHub social preview kan `assets/social-preview.png` worden gebruikt.
-
-Zie [CHANGELOG.md](CHANGELOG.md) voor release notes en [DEVELOPMENT.md](DEVELOPMENT.md) voor ontwikkel- en testinstructies.
-
 ## Installatie in Home Assistant
 
 ### Installatie via HACS
@@ -201,3 +197,8 @@ Stop Home Assistant daarna en verwijder de map:
 ```text
 custom_components/kliko_status
 ```
+
+## Meer informatie
+
+- [Changelog](CHANGELOG.md)
+- [Ontwikkel- en testinstructies](DEVELOPMENT.md)

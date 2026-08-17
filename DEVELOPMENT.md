@@ -1,5 +1,7 @@
 # Development
 
+Voor GitHub social preview kan `assets/social-preview.png` worden gebruikt.
+
 ## Testen buiten Home Assistant
 
 Er staat een standalone testscript in `scripts/test_kliko.py`. Dit gebruikt alleen de Python standard library en schrijft geen credentials weg.
