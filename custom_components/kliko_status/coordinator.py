@@ -12,7 +12,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import KlikoApiClient, KlikoApiError
+from .api import KlikoApiClient, KlikoApiError, SpaarnelandenApiClient
 from .const import (
     CLIENTS,
     CONF_APP,
@@ -25,6 +25,7 @@ from .const import (
     CONF_LOGIN_TYPE,
     CONF_LOGIN_URL,
     CONF_SCAN_INTERVAL_MINUTES,
+    CONF_SOURCE,
     CONF_STREET_NUMBER,
     CONF_STREET_NUMBER_ADDITION,
     CONF_ZIP_CODE,
@@ -32,6 +33,8 @@ from .const import (
     DOMAIN,
     LOGIN_TYPE_ADDRESS,
     LOGIN_TYPE_ADDRESS_AND_CARDNUMBER,
+    SOURCE_KLIKO_MANAGER,
+    SOURCE_SPAARNELANDEN,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -41,6 +44,20 @@ def _derive_client_settings(data: dict[str, Any]) -> dict[str, str]:
     """Return endpoint settings derived from the configured Kliko client."""
     client_id = data[CONF_CLIENT]
     login_type = data.get(CONF_LOGIN_TYPE, CLIENTS[client_id]["login_type"])
+    source = data.get(
+        CONF_SOURCE,
+        CLIENTS[client_id].get(CONF_SOURCE, SOURCE_KLIKO_MANAGER),
+    )
+    if source == SOURCE_SPAARNELANDEN:
+        return {
+            CONF_CONTAINERS_URL: data.get(
+                CONF_CONTAINERS_URL,
+                CLIENTS[client_id]["containers_url"],
+            ),
+            CONF_LOGIN_TYPE: login_type,
+            CONF_SOURCE: source,
+        }
+
     login_endpoint = (
         "loginWithAddress"
         if login_type in (LOGIN_TYPE_ADDRESS, LOGIN_TYPE_ADDRESS_AND_CARDNUMBER)
@@ -54,6 +71,7 @@ def _derive_client_settings(data: dict[str, Any]) -> dict[str, str]:
             f"https://cp-{client_id}.klikocontainermanager.com/MyKliko/getMyContainers",
         ),
         CONF_LOGIN_TYPE: login_type,
+        CONF_SOURCE: source,
         CONF_LOGIN_URL: data.get(
             CONF_LOGIN_URL,
             f"https://cp-{client_id}.klikocontainermanager.com/MyKliko/{login_endpoint}",
@@ -87,19 +105,26 @@ class KlikoDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]
             {**entry.data, **entry.options}
         )
         client_settings = _derive_client_settings(entry.data)
-        self.client = KlikoApiClient(
-            async_get_clientsession(hass),
-            client_settings[CONF_LOGIN_URL],
-            client_settings[CONF_CONTAINERS_URL],
-            client_settings[CONF_LOGIN_TYPE],
-            client_settings[CONF_CLIENT_NAME],
-            client_settings[CONF_APP],
-            entry.data.get(CONF_CARD_NUMBER),
-            entry.data.get(CONF_PASSWORD),
-            entry.data.get(CONF_ZIP_CODE),
-            entry.data.get(CONF_STREET_NUMBER),
-            entry.data.get(CONF_STREET_NUMBER_ADDITION),
-        )
+        session = async_get_clientsession(hass)
+        if client_settings[CONF_SOURCE] == SOURCE_SPAARNELANDEN:
+            self.client = SpaarnelandenApiClient(
+                session,
+                client_settings[CONF_CONTAINERS_URL],
+            )
+        else:
+            self.client = KlikoApiClient(
+                session,
+                client_settings[CONF_LOGIN_URL],
+                client_settings[CONF_CONTAINERS_URL],
+                client_settings[CONF_LOGIN_TYPE],
+                client_settings[CONF_CLIENT_NAME],
+                client_settings[CONF_APP],
+                entry.data.get(CONF_CARD_NUMBER),
+                entry.data.get(CONF_PASSWORD),
+                entry.data.get(CONF_ZIP_CODE),
+                entry.data.get(CONF_STREET_NUMBER),
+                entry.data.get(CONF_STREET_NUMBER_ADDITION),
+            )
 
     async def _async_update_data(self) -> dict[str, dict[str, Any]]:
         """Fetch the latest container data for all selected containers."""

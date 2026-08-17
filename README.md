@@ -3,7 +3,7 @@
 [![CI](https://github.com/realrolfje/klikostatus/actions/workflows/ci.yml/badge.svg)](https://github.com/realrolfje/klikostatus/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/dynamic/json?label=version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Frealrolfje%2Fklikostatus%2Fmain%2Fcustom_components%2Fkliko_status%2Fmanifest.json)](https://github.com/realrolfje/klikostatus/releases)
 
-Home Assistant-integratie voor afvalcontainers uit Kliko Container Manager.
+Home Assistant-integratie voor afvalcontainerstatus uit ondersteunde gemeentelijke bronnen.
 
 GitHub-repository:
 
@@ -93,29 +93,31 @@ Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Afvalcontaine
 
 Tijdens het toevoegen vraagt de integratie om:
 
-- Gemeente
+- Gemeente of bron
 - Update-interval in minuten
 
-Daarna vraagt de integratie om de gegevens die bij de gekozen gemeente horen:
+Daarna vraagt de integratie om de gegevens die bij de gekozen bron horen:
 
 - Bij `PASSWORD` login: kaartnummer en wachtwoord.
 - Bij `ADDRESS` login: postcode, huisnummer en eventueel huisnummertoevoeging.
+- Bij publieke bronnen: geen inloggegevens.
 
-Na het inloggen haalt de integratie de beschikbare containers op. Zoek in de lijst en vink alleen de containers aan waarvoor Home Assistant devices en entities moet aanmaken.
+Daarna haalt de integratie de beschikbare containers op. Zoek in de lijst en vink alleen de containers aan waarvoor Home Assistant devices en entities moet aanmaken.
 
 Deze defaults zijn al ingevuld:
 
 - Update-interval: `60` minuten, minimaal `30` minuten. Dit is later aanpasbaar via de opties van de integratie.
 
-Je kiest zelf de gemeente en vult de gevraagde inloggegevens in. De integratie leidt op basis van de gekozen gemeente de juiste Kliko endpoints af, logt daarmee in, bewaart de ontvangen token alleen in geheugen, en gebruikt die token voor de containerdata.
+Je kiest zelf de gemeente of bron en vult de gevraagde inloggegevens in. Voor Kliko Container Manager leidt de integratie op basis van de gekozen gemeente de juiste endpoints af, logt daarmee in, bewaart de ontvangen token alleen in geheugen, en gebruikt die token voor de containerdata.
 
-Ondersteunde gemeenten in deze integratie:
+Ondersteunde bronnen in deze integratie:
 
 - Land van Cuijk (`PASSWORD`)
 - Maassluis (`ADDRESS`)
 - Oude IJsselstreek (`ADDRESS`)
 - Ouder Amstel (`PASSWORD`)
 - Uithoorn (`PASSWORD`)
+- Spaarnelanden publieke containerkaart (`geen login`)
 
 Het update-interval en de geselecteerde containers kun je later wijzigen via:
 
@@ -129,14 +131,18 @@ De integratie maakt per geselecteerde container een device aan. Per device worde
 
 - Sensor `Vulling`: waarde van `percentageFull`, als percentage.
 - Binary sensor `Fout`: waarde van `error`.
-- Binary sensor `Vol`: waarde van `isFull`.
-- Binary sensor `Bijna vol`: waarde van `isNearlyFull`.
+- Binary sensor `Vol`: waarde van `isFull`, wanneer de bron dit veld levert.
+- Binary sensor `Bijna vol`: waarde van `isNearlyFull`, wanneer de bron dit veld levert.
 - Sensor `Straat`: waarde van `address.street`.
+- Sensor `Wijk`: waarde van `address.district`.
 - Sensor `Afvaltype`: waarde van `fraction`.
+- Geo-location `Locatie`: kaartlocatie van de container, wanneer de bron latitude en longitude levert.
 
-De data wordt standaard elke 60 minuten opgehaald. Per update logt de coordinator in als dat nodig is en doet daarna een POST naar `getMyContainers` met de ontvangen token. Die containerlijst wordt een keer per update opgehaald en daarna verdeeld over de geselecteerde container-devices.
+De data wordt standaard elke 60 minuten opgehaald. Per update haalt de coordinator de containerlijst een keer op en verdeelt die daarna over de geselecteerde container-devices. Bij Kliko Container Manager logt de coordinator in als dat nodig is en doet daarna een POST naar `getMyContainers` met de ontvangen token.
 
-`address.latitude` en `address.longitude` worden als attributen `latitude` en `longitude` op de entities gezet.
+De gewone sensors krijgen geen latitude/longitude-attributen. Locaties worden via de `geo_location` entity aan Home Assistant geleverd, zodat ze op kaart-dashboards gebruikt kunnen worden. `address.district` wordt als attribuut `district` op de gewone entities gezet wanneer de bron die waarde levert.
+
+Als Home Assistant bij de locatie-entity `Unknown` toont, betekent dat niet dat latitude en longitude ontbreken. De coördinaten staan als attributen op de `geo_location` entity; `Unknown` kan slaan op de zone/status-weergave van Home Assistant.
 
 ## Beveiliging
 

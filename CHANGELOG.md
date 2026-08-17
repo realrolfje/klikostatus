@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+## 0.2.0
+
 - Iconen toegevoegd voor de sensors `Vulling`, `Straat` en `Afvaltype`.
+- Eerste ondersteuning voor de publieke Spaarnelanden-containerkaart, met vulling, afvaltype, wijk en lat/long.
+- Spaarnelanden maakt geen `Vol` en `Bijna vol` entities aan, omdat die status niet expliciet door de bron wordt geleverd.
+- Per geselecteerde container met coördinaten wordt een `geo_location` entity aangemaakt; latitude/longitude staan niet langer als attributen op de gewone sensors.
 
 ## 0.1.1
 

@@ -2,8 +2,12 @@
 
 DOMAIN = "kliko_status"
 
+SOURCE_KLIKO_MANAGER = "kliko_manager"
+SOURCE_SPAARNELANDEN = "spaarnelanden"
+
 LOGIN_TYPE_ADDRESS = "ADDRESS"
 LOGIN_TYPE_ADDRESS_AND_CARDNUMBER = "ADDRESS-AND-CARDNUMBER"
+LOGIN_TYPE_NONE = "NONE"
 LOGIN_TYPE_PASSWORD = "PASSWORD"
 
 CLIENTS = {
@@ -27,6 +31,12 @@ CLIENTS = {
         "name": "Uithoorn",
         "login_type": LOGIN_TYPE_PASSWORD,
     },
+    "spaarnelanden": {
+        "name": "Spaarnelanden",
+        "login_type": LOGIN_TYPE_NONE,
+        "source": SOURCE_SPAARNELANDEN,
+        "containers_url": "https://inzameling.spaarnelanden.nl/",
+    },
 }
 
 SUPPORTED_CLIENTS = {client_id: client["name"] for client_id, client in CLIENTS.items()}
@@ -44,10 +54,10 @@ CONF_CONTAINERS_URL = "containers_url"
 CONF_LOGIN_TYPE = "login_type"
 CONF_LOGIN_URL = "login_url"
 CONF_SCAN_INTERVAL_MINUTES = "scan_interval_minutes"
+CONF_SOURCE = "source"
 CONF_STREET_NUMBER = "street_number"
 CONF_STREET_NUMBER_ADDITION = "street_number_addition"
 CONF_ZIP_CODE = "zip_code"
 
 ATTR_CONTAINER_NUMBER = "container_number"
-ATTR_LATITUDE = "latitude"
-ATTR_LONGITUDE = "longitude"
+ATTR_DISTRICT = "district"

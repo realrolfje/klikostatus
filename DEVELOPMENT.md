@@ -84,9 +84,9 @@ Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Afvalcontaine
 
 Vul in:
 
-1. De gemeente.
+1. De gemeente of bron.
 2. Het update-interval, standaard `60` minuten.
-3. De gevraagde login-gegevens voor de gekozen gemeente.
+3. De gevraagde login-gegevens voor de gekozen gemeente, als die bron login gebruikt.
 4. Zoek in de opgehaalde lijst en selecteer een of meer containers.
 
 Na succesvol toevoegen verwacht je:
@@ -94,7 +94,9 @@ Na succesvol toevoegen verwacht je:
 - Een device per geselecteerde container.
 - Sensor `Vulling` met `%` als eenheid.
 - Sensor `Straat`.
+- Sensor `Wijk`.
 - Sensor `Afvaltype`.
+- Geo-location `Locatie` als de gekozen container coördinaten heeft.
 - Binary sensors `Fout`, `Vol` en `Bijna vol`.
 
 Stoppen en opruimen:
