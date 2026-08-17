@@ -1,6 +1,6 @@
 {
   "domain": "kliko_status",
-  "name": "Kliko Container Manager",
+  "name": "Kliko Afvalcontainer Status",
   "codeowners": ["@realrolfje"],
   "config_flow": true,
   "documentation": "https://github.com/realrolfje/klikostatus",

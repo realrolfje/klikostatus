@@ -1,4 +1,4 @@
-# Kliko Container Manager Home Assistant-integratie
+# Kliko Afvalcontainer Status Home Assistant-integratie
 
 Home Assistant-integratie voor afvalcontainers uit Kliko Container Manager.
 
@@ -38,14 +38,14 @@ https://github.com/realrolfje/klikostatus
 
 5. Kies als categorie `Integration`.
 6. Klik `Add`.
-7. Zoek daarna in HACS naar `Kliko Container Manager`.
+7. Zoek daarna in HACS naar `Kliko Afvalcontainer Status`.
 8. Installeer de integratie.
 9. Herstart Home Assistant.
 
 Voeg de integratie daarna toe via:
 
 ```text
-Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Container Manager
+Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Afvalcontainer Status
 ```
 
 ### Handmatige installatie
@@ -85,7 +85,7 @@ Herstart daarna Home Assistant.
 Voeg de integratie toe via:
 
 ```text
-Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Container Manager
+Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Afvalcontainer Status
 ```
 
 ## Configuratie
@@ -119,7 +119,7 @@ Ondersteunde gemeenten in deze integratie:
 Het update-interval en de geselecteerde containers kun je later wijzigen via:
 
 ```text
-Instellingen > Apparaten & diensten > Kliko Container Manager > Configureren
+Instellingen > Apparaten & diensten > Kliko Afvalcontainer Status > Configureren
 ```
 
 ## Entities
@@ -151,7 +151,7 @@ Als de integratie via HACS is toegevoegd, verschijnt een update automatisch in H
 
 1. Open HACS.
 2. Ga naar `Integrations`.
-3. Open `Kliko Container Manager`.
+3. Open `Kliko Afvalcontainer Status`.
 4. Klik `Update` als er een update beschikbaar is.
 5. Herstart Home Assistant.
 
@@ -188,7 +188,7 @@ Herstart daarna Home Assistant.
 Verwijder eerst de integratie uit Home Assistant:
 
 ```text
-Instellingen > Apparaten & diensten > Kliko Container Manager > Verwijderen
+Instellingen > Apparaten & diensten > Kliko Afvalcontainer Status > Verwijderen
 ```
 
 Stop Home Assistant daarna en verwijder de map:
@@ -276,7 +276,7 @@ Doorloop de eerste Home Assistant-wizard:
 Voeg daarna de integratie toe:
 
 ```text
-Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Container Manager
+Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Afvalcontainer Status
 ```
 
 Vul in:

@@ -1,9 +1,9 @@
 {
-  "title": "Kliko Container Manager",
+  "title": "Kliko Afvalcontainer Status",
   "config": {
     "step": {
       "user": {
-        "title": "Set up Kliko Container Manager",
+        "title": "Set up Kliko Afvalcontainer Status",
         "description": "Choose the municipality. After logging in you can select one or more containers.",
         "data": {
           "client": "Municipality",
@@ -49,7 +49,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Kliko Container Manager options",
+        "title": "Kliko Afvalcontainer Status options",
         "data": {
           "container_numbers": "Containers",
           "scan_interval_minutes": "Scan interval in minutes"

@@ -1,9 +1,9 @@
 {
-  "title": "Kliko Container Manager",
+  "title": "Kliko Afvalcontainer Status",
   "config": {
     "step": {
       "user": {
-        "title": "Kliko Container Manager instellen",
+        "title": "Kliko Afvalcontainer Status instellen",
         "description": "Kies de gemeente. Na het inloggen kun je een of meer containers selecteren.",
         "data": {
           "client": "Gemeente",
@@ -49,7 +49,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Kliko Container Manager opties",
+        "title": "Kliko Afvalcontainer Status opties",
         "data": {
           "container_numbers": "Containers",
           "scan_interval_minutes": "Update-interval in minuten"
