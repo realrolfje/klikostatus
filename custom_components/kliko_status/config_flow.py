@@ -311,7 +311,7 @@ class KlikoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             for container in self._containers
             if (number := _container_number(container))
         ]
-        default = [option["value"] for option in options]
+        options.sort(key=lambda option: option["label"])
 
         return self.async_show_form(
             step_id="containers",
@@ -319,7 +319,7 @@ class KlikoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(
                         CONF_CONTAINER_NUMBERS,
-                        default=default,
+                        default=[],
                     ): SelectSelector(
                         SelectSelectorConfig(
                             options=options,
@@ -391,7 +391,8 @@ class KlikoOptionsFlow(config_entries.OptionsFlowWithReload):
             container_number
             for container_number in current_containers
             if container_number in available
-        ] or [option["value"] for option in options]
+        ]
+        options.sort(key=lambda option: option["label"])
 
         schema = vol.Schema(
             {

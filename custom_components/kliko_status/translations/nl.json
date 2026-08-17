@@ -28,7 +28,7 @@
       },
       "containers": {
         "title": "Containers selecteren",
-        "description": "Kies de containers waarvoor Home Assistant devices en entities moet aanmaken.",
+        "description": "Zoek in de lijst en selecteer alleen de containers waarvoor Home Assistant devices en entities moet aanmaken.",
         "data": {
           "container_numbers": "Containers"
         }

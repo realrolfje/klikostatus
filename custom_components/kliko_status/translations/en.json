@@ -28,7 +28,7 @@
       },
       "containers": {
         "title": "Select containers",
-        "description": "Choose the containers for which Home Assistant should create devices and entities.",
+        "description": "Search the list and select only the containers for which Home Assistant should create devices and entities.",
         "data": {
           "container_numbers": "Containers"
         }

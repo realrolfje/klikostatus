@@ -103,7 +103,7 @@ Daarna vraagt de integratie om de gegevens die bij de gekozen gemeente horen:
 - Bij `PASSWORD` login: kaartnummer en wachtwoord.
 - Bij `ADDRESS` login: postcode, huisnummer en eventueel huisnummertoevoeging.
 
-Na het inloggen haalt de integratie de beschikbare containers op en kies je een of meer containers waarvoor Home Assistant devices en entities moet aanmaken.
+Na het inloggen haalt de integratie de beschikbare containers op. Zoek in de lijst en vink alleen de containers aan waarvoor Home Assistant devices en entities moet aanmaken.
 
 Deze defaults zijn al ingevuld:
 
@@ -287,7 +287,7 @@ Vul in:
 1. De gemeente.
 2. Het update-interval, standaard `60` minuten.
 3. De gevraagde login-gegevens voor de gekozen gemeente.
-4. Selecteer een of meer containers uit de lijst die de integratie ophaalt.
+4. Zoek in de opgehaalde lijst en selecteer een of meer containers.
 
 Na succesvol toevoegen verwacht je:
 
