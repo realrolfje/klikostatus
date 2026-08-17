@@ -62,6 +62,7 @@ SENSOR_DESCRIPTIONS: tuple[KlikoSensorEntityDescription, ...] = (
     KlikoSensorEntityDescription(
         key="percentage_full",
         translation_key="percentage_full",
+        icon="mdi:trash-can-outline",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         value_fn=_percentage_full,
@@ -69,11 +70,13 @@ SENSOR_DESCRIPTIONS: tuple[KlikoSensorEntityDescription, ...] = (
     KlikoSensorEntityDescription(
         key="street",
         translation_key="street",
+        icon="mdi:card-account-details-outline",
         value_fn=_street,
     ),
     KlikoSensorEntityDescription(
         key="fraction",
         translation_key="fraction",
+        icon="mdi:delete-variant",
         value_fn=_fraction,
     ),
 )
