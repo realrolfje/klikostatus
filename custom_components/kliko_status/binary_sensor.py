@@ -52,7 +52,8 @@ async def async_setup_entry(
 ) -> None:
     """Set up Kliko binary sensors."""
     async_add_entities(
-        KlikoBinarySensor(entry, description)
+        KlikoBinarySensor(entry, container_number, description)
+        for container_number in entry.runtime_data.coordinator.container_numbers
         for description in BINARY_SENSOR_DESCRIPTIONS
     )
 
@@ -65,10 +66,11 @@ class KlikoBinarySensor(KlikoEntity, BinarySensorEntity):
     def __init__(
         self,
         entry: KlikoConfigEntry,
+        container_number: str,
         description: KlikoBinarySensorEntityDescription,
     ) -> None:
         """Initialize the binary sensor."""
-        super().__init__(entry)
+        super().__init__(entry, container_number)
         self.entity_description = description
         self._attr_unique_id = (
             f"{self._container_number.casefold()}_{description.key}"
@@ -77,7 +79,7 @@ class KlikoBinarySensor(KlikoEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         """Return true if the binary sensor is on."""
-        value = self.entity_description.value_fn(self.coordinator.data)
+        value = self.entity_description.value_fn(self.container_data)
         if value is None:
             return None
         return bool(value)

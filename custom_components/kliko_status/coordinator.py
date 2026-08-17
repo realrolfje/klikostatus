@@ -20,6 +20,7 @@ from .const import (
     CONF_CLIENT,
     CONF_CLIENT_NAME,
     CONF_CONTAINER_NUMBER,
+    CONF_CONTAINER_NUMBERS,
     CONF_CONTAINERS_URL,
     CONF_LOGIN_TYPE,
     CONF_LOGIN_URL,
@@ -60,7 +61,7 @@ def _derive_client_settings(data: dict[str, Any]) -> dict[str, str]:
     }
 
 
-class KlikoDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
+class KlikoDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
     """Coordinator that fetches Kliko container state."""
 
     config_entry: ConfigEntry
@@ -82,7 +83,9 @@ class KlikoDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             ),
         )
         self.config_entry = entry
-        self.container_number = entry.data[CONF_CONTAINER_NUMBER]
+        self.container_numbers = _configured_container_numbers(
+            {**entry.data, **entry.options}
+        )
         client_settings = _derive_client_settings(entry.data)
         self.client = KlikoApiClient(
             async_get_clientsession(hass),
@@ -98,9 +101,44 @@ class KlikoDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             entry.data.get(CONF_STREET_NUMBER_ADDITION),
         )
 
-    async def _async_update_data(self) -> dict[str, Any]:
-        """Fetch the latest container data."""
+    async def _async_update_data(self) -> dict[str, dict[str, Any]]:
+        """Fetch the latest container data for all selected containers."""
         try:
-            return await self.client.async_get_container(self.container_number)
+            containers = await self.client.async_get_containers()
         except KlikoApiError as err:
             raise UpdateFailed(str(err)) from err
+
+        selected = {
+            container_number.strip().casefold(): container_number
+            for container_number in self.container_numbers
+        }
+        data: dict[str, dict[str, Any]] = {}
+        for container in containers:
+            container_number = str(container.get("containerNumber", "")).strip()
+            configured_number = selected.get(container_number.casefold())
+            if configured_number is not None:
+                data[configured_number] = container
+
+        missing = [
+            container_number
+            for container_number in self.container_numbers
+            if container_number not in data
+        ]
+        if missing:
+            raise UpdateFailed(
+                f"Configured Kliko containers were not found: {', '.join(missing)}"
+            )
+
+        return data
+
+
+def _configured_container_numbers(data: dict[str, Any]) -> list[str]:
+    """Return configured container numbers, including legacy single-container data."""
+    container_numbers = data.get(CONF_CONTAINER_NUMBERS)
+    if isinstance(container_numbers, list):
+        return [str(container_number) for container_number in container_numbers]
+
+    container_number = data.get(CONF_CONTAINER_NUMBER)
+    if container_number is None:
+        return []
+    return [str(container_number)]

@@ -112,10 +112,7 @@ class KlikoApiClient:
 
     async def async_get_container(self, container_number: str) -> dict[str, Any]:
         """Fetch one container by its container number."""
-        data = await self._async_get_containers()
-
-        if not isinstance(data, list):
-            raise KlikoApiError("Kliko endpoint returned an unexpected payload")
+        data = await self.async_get_containers()
 
         expected = container_number.strip().casefold()
         for container in data:
@@ -129,7 +126,7 @@ class KlikoApiClient:
             f"Container number {container_number!r} was not found"
         )
 
-    async def _async_get_containers(self) -> Any:
+    async def async_get_containers(self) -> list[dict[str, Any]]:
         """Fetch containers, refreshing the token once if needed."""
         if self._token is None:
             await self.async_login()
@@ -139,11 +136,15 @@ class KlikoApiClient:
             {"token": self._token},
         )
         if isinstance(data, list):
-            return data
+            return [container for container in data if isinstance(container, dict)]
 
         self._token = None
         await self.async_login()
-        return await self._async_post_json(
+        data = await self._async_post_json(
             self._containers_url,
             {"token": self._token},
         )
+        if isinstance(data, list):
+            return [container for container in data if isinstance(container, dict)]
+
+        raise KlikoApiError("Kliko endpoint returned an unexpected payload")

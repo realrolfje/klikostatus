@@ -4,10 +4,9 @@
     "step": {
       "user": {
         "title": "Set up Kliko Container Manager",
-        "description": "Choose the municipality and container.",
+        "description": "Choose the municipality. After logging in you can select one or more containers.",
         "data": {
           "client": "Municipality",
-          "container_number": "Container number",
           "scan_interval_minutes": "Scan interval in minutes"
         }
       },
@@ -26,12 +25,21 @@
           "street_number_addition": "Addition",
           "card_number": "Card number"
         }
+      },
+      "containers": {
+        "title": "Select containers",
+        "description": "Choose the containers for which Home Assistant should create devices and entities.",
+        "data": {
+          "container_numbers": "Containers"
+        }
       }
     },
     "error": {
       "cannot_connect": "Could not connect to the Kliko endpoint.",
       "invalid_auth": "The login details were rejected.",
       "container_not_found": "The configured container number was not found.",
+      "no_containers_available": "No containers were found for this login.",
+      "no_containers_selected": "Select at least one container.",
       "unsupported_login_type": "This municipality uses a login method that is not supported yet."
     },
     "abort": {
@@ -43,6 +51,7 @@
       "init": {
         "title": "Kliko Container Manager options",
         "data": {
+          "container_numbers": "Containers",
           "scan_interval_minutes": "Scan interval in minutes"
         }
       }

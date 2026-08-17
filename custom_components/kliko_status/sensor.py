@@ -86,7 +86,9 @@ async def async_setup_entry(
 ) -> None:
     """Set up Kliko sensors."""
     async_add_entities(
-        KlikoSensor(entry, description) for description in SENSOR_DESCRIPTIONS
+        KlikoSensor(entry, container_number, description)
+        for container_number in entry.runtime_data.coordinator.container_numbers
+        for description in SENSOR_DESCRIPTIONS
     )
 
 
@@ -98,10 +100,11 @@ class KlikoSensor(KlikoEntity, SensorEntity):
     def __init__(
         self,
         entry: KlikoConfigEntry,
+        container_number: str,
         description: KlikoSensorEntityDescription,
     ) -> None:
         """Initialize the sensor."""
-        super().__init__(entry)
+        super().__init__(entry, container_number)
         self.entity_description = description
         self._attr_unique_id = (
             f"{self._container_number.casefold()}_{description.key}"
@@ -110,4 +113,4 @@ class KlikoSensor(KlikoEntity, SensorEntity):
     @property
     def native_value(self) -> Any:
         """Return the native sensor value."""
-        return self.entity_description.value_fn(self.coordinator.data)
+        return self.entity_description.value_fn(self.container_data)

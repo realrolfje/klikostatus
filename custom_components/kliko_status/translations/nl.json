@@ -4,10 +4,9 @@
     "step": {
       "user": {
         "title": "Kliko Container Manager instellen",
-        "description": "Kies de gemeente en container.",
+        "description": "Kies de gemeente. Na het inloggen kun je een of meer containers selecteren.",
         "data": {
           "client": "Gemeente",
-          "container_number": "Containernummer",
           "scan_interval_minutes": "Update-interval in minuten"
         }
       },
@@ -26,12 +25,21 @@
           "street_number_addition": "Toevoeging",
           "card_number": "Kaartnummer"
         }
+      },
+      "containers": {
+        "title": "Containers selecteren",
+        "description": "Kies de containers waarvoor Home Assistant devices en entities moet aanmaken.",
+        "data": {
+          "container_numbers": "Containers"
+        }
       }
     },
     "error": {
       "cannot_connect": "Kan geen verbinding maken met het Kliko-endpoint.",
       "invalid_auth": "De inloggegevens zijn geweigerd.",
       "container_not_found": "Het ingestelde containernummer is niet gevonden.",
+      "no_containers_available": "Er zijn geen containers gevonden voor deze login.",
+      "no_containers_selected": "Selecteer minimaal een container.",
       "unsupported_login_type": "Deze gemeente gebruikt een loginmethode die nog niet ondersteund wordt."
     },
     "abort": {
@@ -43,6 +51,7 @@
       "init": {
         "title": "Kliko Container Manager opties",
         "data": {
+          "container_numbers": "Containers",
           "scan_interval_minutes": "Update-interval in minuten"
         }
       }

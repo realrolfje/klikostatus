@@ -93,7 +93,6 @@ Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Container Man
 Tijdens het toevoegen vraagt de integratie om:
 
 - Gemeente
-- Containernummer
 - Update-interval in minuten
 
 Daarna vraagt de integratie om de gegevens die bij de gekozen gemeente horen:
@@ -101,11 +100,13 @@ Daarna vraagt de integratie om de gegevens die bij de gekozen gemeente horen:
 - Bij `PASSWORD` login: kaartnummer en wachtwoord.
 - Bij `ADDRESS` login: postcode, huisnummer en eventueel huisnummertoevoeging.
 
+Na het inloggen haalt de integratie de beschikbare containers op en kies je een of meer containers waarvoor Home Assistant devices en entities moet aanmaken.
+
 Deze defaults zijn al ingevuld:
 
 - Update-interval: `60` minuten, minimaal `30` minuten. Dit is later aanpasbaar via de opties van de integratie.
 
-Je kiest zelf de gemeente en vult het containernummer en de gevraagde inloggegevens in. De integratie leidt op basis van de gekozen gemeente de juiste Kliko endpoints af, logt daarmee in, bewaart de ontvangen token alleen in geheugen, en gebruikt die token voor de containerdata.
+Je kiest zelf de gemeente en vult de gevraagde inloggegevens in. De integratie leidt op basis van de gekozen gemeente de juiste Kliko endpoints af, logt daarmee in, bewaart de ontvangen token alleen in geheugen, en gebruikt die token voor de containerdata.
 
 Ondersteunde gemeenten in deze integratie:
 
@@ -115,7 +116,7 @@ Ondersteunde gemeenten in deze integratie:
 - Ouder Amstel (`PASSWORD`)
 - Uithoorn (`PASSWORD`)
 
-Het update-interval kun je later wijzigen via:
+Het update-interval en de geselecteerde containers kun je later wijzigen via:
 
 ```text
 Instellingen > Apparaten & diensten > Kliko Container Manager > Configureren
@@ -123,7 +124,7 @@ Instellingen > Apparaten & diensten > Kliko Container Manager > Configureren
 
 ## Entities
 
-De integratie maakt deze entities aan:
+De integratie maakt per geselecteerde container een device aan. Per device worden deze entities aangemaakt:
 
 - Sensor `Vulling`: waarde van `percentageFull`, als percentage.
 - Binary sensor `Fout`: waarde van `error`.
@@ -132,7 +133,7 @@ De integratie maakt deze entities aan:
 - Sensor `Straat`: waarde van `address.street`.
 - Sensor `Afvaltype`: waarde van `fraction`.
 
-De data wordt standaard elke 60 minuten opgehaald. Bij het opstarten logt de integratie in via `loginWithPassword`; daarna doet de coordinator een POST naar `getMyContainers` met de ontvangen token.
+De data wordt standaard elke 60 minuten opgehaald. Per update logt de coordinator in als dat nodig is en doet daarna een POST naar `getMyContainers` met de ontvangen token. Die containerlijst wordt een keer per update opgehaald en daarna verdeeld over de geselecteerde container-devices.
 
 `address.latitude` en `address.longitude` worden als attributen `latitude` en `longitude` op de entities gezet.
 
@@ -281,13 +282,13 @@ Instellingen > Apparaten & diensten > Integratie toevoegen > Kliko Container Man
 Vul in:
 
 1. De gemeente.
-2. Het containernummer.
-3. Het update-interval, standaard `60` minuten.
-4. De gevraagde login-gegevens voor de gekozen gemeente.
+2. Het update-interval, standaard `60` minuten.
+3. De gevraagde login-gegevens voor de gekozen gemeente.
+4. Selecteer een of meer containers uit de lijst die de integratie ophaalt.
 
 Na succesvol toevoegen verwacht je:
 
-- Een device voor de container.
+- Een device per geselecteerde container.
 - Sensor `Vulling` met `%` als eenheid.
 - Sensor `Straat`.
 - Sensor `Afvaltype`.
